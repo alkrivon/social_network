@@ -38,4 +38,12 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "friend_id")}
     )
     private List<User> friends;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinTable(
+            name = "user_invite",
+            joinColumns = {@JoinColumn(name = "ToUser")},
+            inverseJoinColumns = {@JoinColumn(name = "fromUser")}
+    )
+    private List<User> invitations;
 }

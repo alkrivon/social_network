@@ -18,6 +18,10 @@
         user_id bigint not null,
         friend_id bigint not null);
 
+ create table user_invite (
+            from_user bigint not null,
+            to_user bigint not null);
+
  alter table user_friends
     add constraint FK11y5boh1e7gh60rdqixyetv3x
     foreign key (friend_id) references users (id);
@@ -29,3 +33,12 @@
  alter table users
      add constraint FKp56c1712k691lhsyewcssf40f
      foreign key (role_id) references roles (id);
+
+ alter table user_invite
+    add constraint FKd95jqup6pwqih3ho39y8m7i6e
+    foreign key (to_user) references users (id);
+
+ alter table user_invite
+    add constraint FKku0ri6i8hgr1ps8jn5so2u3xb
+    foreign key (from_user) references users (id);
+
