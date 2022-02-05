@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/**").hasRole("USER")
-                .antMatchers("/register", "/auth").permitAll()
+                .antMatchers("/register", "/auth", "/v3/api-docs", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

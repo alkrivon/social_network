@@ -1,5 +1,7 @@
 package ru.S7.social_network.controller;
 
+
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
+@Api( tags = "User")
 public class UserController {
 
     private final UserService userService;

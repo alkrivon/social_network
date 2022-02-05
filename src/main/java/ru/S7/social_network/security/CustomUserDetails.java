@@ -1,5 +1,7 @@
 package ru.S7.social_network.security;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +10,8 @@ import ru.S7.social_network.entities.User;
 import java.util.Collection;
 import java.util.Collections;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private String login;
