@@ -14,7 +14,7 @@
 В качестве БД используется MySQL 8.0.24 с параметрами:
 
 + db_user: AlexKriv
-+ db_pass: AlexKrix
++ db_pass: AlexKriv
 + db_host: localhost:3306
 + db_name: s7_social_network
 
