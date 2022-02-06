@@ -55,10 +55,19 @@ public class UserService {
     public void createInvite(Long fromUserId, Long toUserId) throws NotFoundException {
         Optional<User> fromUser = userRepository.findUserById(fromUserId);
         Optional<User> toUser = userRepository.findUserById(toUserId);
-        if (toUser.isPresent()) {
-            toUser.get().getInvitations().add(fromUser.get());
-        } else throw new NotFoundException("There is no user with id = " + toUserId);
+        if (toUser.isPresent() &&
+            !toUser.get().getInvitations().contains(fromUser.get()) &&
+            toUserId != fromUserId &&
+            !toUser.get().getFriends().contains(fromUser.get())) {
 
+            toUser.get().getInvitations().add(fromUser.get());
+
+        } else if (toUser.get().getInvitations().contains(fromUser.get())) {
+            throw new NotFoundException("You have already applied for friends!");
+        } else if (toUser.get().getFriends().contains(fromUser.get())) {
+            throw new NotFoundException("The user has already been added to friends!");
+        }
+        else throw new NotFoundException("There is no user with id = " + toUserId);
     }
 
     @Transactional(readOnly = true)
@@ -71,23 +80,36 @@ public class UserService {
 
     @Transactional
     public void addToFriends(Long userId, Long candidateId) throws NotFoundException {
-        User user = userRepository.findUserById(userId).get();
-        User candidate = userRepository.findUserById(candidateId).get();
-        List<User> userFriends = user.getFriends();
-        List<User> candidateFriends = user.getFriends();
+        Optional<User> user = userRepository.findUserById(userId);
+        Optional<User> candidate = userRepository.findUserById(candidateId);
+        if (user.isPresent() && candidate.isPresent()) {
 
-        if (user.getInvitations().contains(candidate) && !user.getFriends().contains(candidate)) {
-            userFriends.add(candidate);
-            candidateFriends.add(user);
-            user.getInvitations().remove(candidate);
-        } else throw new NotFoundException("There is no application!");
+            List<User> userFriends = user.get().getFriends();
+            List<User> candidateFriends = candidate.get().getFriends();
+
+            if (user.get().getInvitations().contains(candidate.get())) {
+
+                userFriends.add(candidate.get());
+                candidateFriends.add(user.get());
+                user.get().getInvitations().remove(candidate.get());
+            }
+            else if (!user.get().getInvitations().contains(candidate.get())) {
+                throw new NotFoundException("There is no invite!");
+            }
+        }
+        else throw new NotFoundException("There is no user with id = " + candidateId);
     }
 
-    public void deleteFriend(Long userId, Long friendId) {
-        User user = userRepository.findUserById(userId).get();
-        User friend = userRepository.findUserById(friendId).get();
-        user.getFriends().remove(friend);
-        friend.getFriends().remove(user);
+    @Transactional
+    public void deleteFriend(Long userId, Long friendId) throws NotFoundException {
+        Optional<User> user = userRepository.findUserById(userId);
+        Optional<User> friend = userRepository.findUserById(friendId);
+        if (user.isPresent() && friend.isPresent() &&
+            user.get().getFriends().contains(friend.get())) {
+
+            user.get().getFriends().remove(friend.get());
+            friend.get().getFriends().remove(user.get());
+        } else throw new NotFoundException("There is no friend with id = " + friendId);
     }
 
     public User saveUser(User user) {

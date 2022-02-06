@@ -1,5 +1,7 @@
 package ru.S7.social_network.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,14 @@ import ru.S7.social_network.service.UserService;
 
 @RequiredArgsConstructor
 @RestController
+@Api( tags = "Authorization and registration")
 public class AuthController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
+    @Operation(summary = "Регистрация")
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest registrationRequest) {
 
@@ -37,11 +41,12 @@ public class AuthController {
         return new ResponseEntity<>("Register is successful!", HttpStatus.OK);
     }
 
+    @Operation(summary = "Авторизация")
     @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest request) throws AuthException {
         User user = userService.findByLoginAndPassword(request.getLogin(),
                                                         request.getPassword());
         String token = jwtTokenProvider.generateToken(user.getLogin());
-        return new AuthResponse(token);
+        return new AuthResponse("Bearer " + token);
     }
 }
