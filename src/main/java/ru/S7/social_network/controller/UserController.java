@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @Operation(summary = "Отправить заявку в друзья")
-    @PutMapping("/addInvite/{toUserId}")
+    @PostMapping("/addInvite/{toUserId}")
     public ResponseEntity<String> createInvite(@ApiIgnore @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                @PathVariable Long toUserId) throws NotFoundException {
         userService.createInvite(customUserDetails.getId(), toUserId);
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @Operation(summary = "Добавить в друзья")
-    @PutMapping("/addToFriends/{candidateId}")
+    @PostMapping("/addToFriends/{candidateId}")
     public ResponseEntity<String> addToFriend(@ApiIgnore @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                               @PathVariable Long candidateId) throws NotFoundException {
         userService.addToFriends(customUserDetails.getId(), candidateId);
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @Operation(summary = "Удалить из друзей")
-    @PutMapping("/deleteFriend/{friendId}")
+    @DeleteMapping("/deleteFriend/{friendId}")
     public ResponseEntity<String> deleteFriend(@ApiIgnore @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                @PathVariable Long friendId) throws NotFoundException {
         userService.deleteFriend(customUserDetails.getId(), friendId);
